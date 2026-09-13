@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Timestamp Microservice</title>
+
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+  <main class="container">
+
+    <h1>Timestamp Microservice</h1>
+
+    <p>
+      Enter a date in the URL to get its Unix timestamp and UTC date.
+    </p>
+
+    <h2>Example Usage</h2>
+
+    <ul>
+      <li>
+        <a href="/api/2015-12-25">
+          /api/2015-12-25
+        </a>
+      </li>
+
+      <li>
+        <a href="/api/1451001600000">
+          /api/1451001600000
+        </a>
+      </li>
+    </ul>
+
+    <h2>Example Output</h2>
+
+    <pre>{
+  "unix": 1451001600000,
+  "utc": "Fri, 25 Dec 2015 00:00:00 GMT"
+}</pre>
+
+    <h2>Try It</h2>
+
+    <form id="dateForm">
+      <input
+        type="text"
+        id="dateInput"
+        placeholder="Example: 2015-12-25"
+        required
+      >
+
+      <button type="submit">
+        Convert Date
+      </button>
+    </form>
+
+    <pre id="result"></pre>
+
+  </main>
+
+  <script>
+    const form = document.getElementById("dateForm");
+    const input = document.getElementById("dateInput");
+    const result = document.getElementById("result");
+
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      const date = input.value.trim();
+
+      try {
+        const response = await fetch(
+          "/api/" + encodeURIComponent(date)
+        );
+
+        const data = await response.json();
+
+        result.textContent = JSON.stringify(data, null, 2);
+      } catch (error) {
+        result.textContent = JSON.stringify(
+          { error: "Something went wrong" },
+          null,
+          2
+        );
+      }
+    });
+  </script>
+
+</body>
+</html>
